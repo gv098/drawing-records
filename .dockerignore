@@ -1,0 +1,10 @@
+.git
+node_modules
+dist
+.generated
+public/assets
+work
+outputs
+test-results
+*.log
+.env*

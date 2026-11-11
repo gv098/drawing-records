@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>绘画记录</title>
+</head>
+<body>
+<header><div class="brand"><div class="mark" aria-hidden="true">绘</div><div><h1>绘画记录</h1><p></p></div></div><div class="head-right"><span class="tag">绘画过程</span><button id="openHistory" aria-haspopup="dialog">记录</button><button id="resetSample">示例图片</button></div></header>
+<main>
+<aside>
+ <section class="source-section"><h2>参考图片</h2><div class="source"><img class="thumb" id="thumb" alt="参考图片缩略图"><div><strong id="sourceName">蓝发角色插画</strong><small id="dimensions">640 × 1137 px</small></div></div><label class="upload" id="uploadLabel">＋ 上传另一张图片<input id="upload" type="file" accept="image/png,image/jpeg,image/webp" aria-label="上传参考图片"></label></section>
+ <section class="learning"><h2>绘制阶段 · 点击逐笔观看</h2><div id="stages" class="stages"></div></section>
+ <section class="stroke-detail"><h2>当前笔触</h2><div class="detail-row"><span><i id="swatch" class="stroke-color"></i><span id="hex">—</span></span><span id="brushWidth">— px</span></div><p class="note" id="strokeInfo">正在生成路径…</p></section>
+ <div class="bottom-note"><p class="note">先看轮廓如何形成，再观察颜色与明暗。<br>线稿独立置顶，上色不会盖住线条。</p></div>
+</aside>
+<section class="workspace">
+ <div class="style-panel"><div class="mode-tabs" role="group" aria-label="绘画风格"><button id="modeFill" aria-pressed="true">平滑涂色</button><button id="modeBrush" aria-pressed="false">手绘笔触</button></div><p id="modeHint">按区域连贯铺色，完成一处再画下一处。</p></div>
+ <div class="toolbar"><div class="title-block"><strong>从空白画布到完整插画</strong><small>草稿 → 线稿 → 底色 → 明暗 → 局部刻画 → 高光修边。</small></div><details id="viewTools" open><summary>画布工具与笔刷</summary><div class="views"><label for="brushStyle" class="muted" style="font-size:11px">笔刷</label><select id="brushStyle"><option value="round">硬圆笔</option><option value="soft">柔边笔</option><option value="dry">干刷</option></select><label style="font-size:11px;display:flex;align-items:center;gap:4px"><input type="checkbox" id="showNib" checked>笔尖</label><button id="compare" aria-pressed="true">原图对照</button><button id="viewAll">全图</button><button id="zoomOut" aria-label="缩小画布">−</button><button id="zoomIn" aria-label="放大画布">＋</button><label for="zoom" class="muted" style="font-size:11px">缩放</label><select id="zoom"><option id="currentZoom" value="current" selected disabled>1.0× 当前</option><option value="1">适应画布</option><option value="2">2× 放大</option><option value="3">3× 放大</option><option value="4">4× 放大</option><option value="6">6× 放大</option></select></div></details></div>
+ <div class="generation" id="generation"><span id="genText">正在准备画布…</span><div class="gen-track"><span id="genFill"></span></div></div>
+ <div id="error" class="error" role="alert"></div>
+ <div id="mobileStages"></div>
+ <div class="mobile-view-tabs" role="group" aria-label="切换画布和原图"><button id="mobileDrawing" aria-pressed="true">画布</button><button id="mobileReference" aria-pressed="false">原图</button></div>
+ <div id="canvasZone" class="canvas-zone compare">
+   <div class="art-panel"><div class="panel-label"><strong>重绘画布</strong><span id="viewStatus">全图观察 · 1.0×</span><span id="canvasStatus">准备中</span></div><div class="paper-viewport" id="drawViewport" tabindex="0" aria-label="绘画视图：滚轮缩放，拖动平移，加减键缩放，零键看全图"><div class="paper" id="drawPaper"><canvas id="drawing" aria-label="由绘制步骤重建的图片"></canvas><canvas id="cursor" aria-hidden="true"></canvas></div><div id="nibColor" class="nib-color" hidden aria-label="当前笔刷颜色"><span id="nibColorSwatch" aria-hidden="true"></span><span id="nibColorHex"></span></div></div></div>
+   <div class="art-panel ref-panel" id="refPanel"><div class="panel-label"><strong>上传的原图</strong><div class="reference-controls"><span id="refZoomStatus">1.0×</span><button id="refZoomOut" aria-label="缩小原图">−</button><button id="refZoomIn" aria-label="放大原图">＋</button><button id="refViewAll" aria-label="原图恢复全图">全图</button></div></div><div class="paper-viewport" id="refViewport" tabindex="0" aria-label="原图视图：双指或滚轮缩放，拖动平移"><div class="paper" id="refPaper"><img id="reference" alt="用于对照的上传原图"></div></div></div>
+ </div>
+ <p class="view-help">原图和画布均可双指或滚轮缩放、拖动查看；双击放大，再双击恢复全图。</p>
+ <section class="player" aria-label="绘制过程播放器"><div class="seek-head"><strong id="stageTitle">正在规划绘制步骤</strong><span class="numbers" id="counter">0 / 0 笔</span></div><input id="seek" type="range" min="0" max="1" value="0" step="1" aria-label="绘制进度" disabled><div class="player-bottom"><div class="play-controls"><button id="play" class="primary" disabled>从头播放</button><button id="prev" disabled aria-label="上一步">上一步</button><button id="next" disabled aria-label="下一步">下一步</button><button id="showResult" disabled>直接完成</button></div><div class="speed-controls"><label for="speed">播放速度</label><select id="speed"><option value="auto">逐笔勾线 · 铺色加速</option><option value="1">1× 正常运笔</option><option value="4">4× 加速回放</option><option value="16" selected>16× 快速浏览</option><option value="64">64× 快速回放</option><option value="256">256× 极速回放</option><option value="1024">1024× 快进</option></select></div></div></section>
+ <div class="footer"><span id="status">本地处理 · 图片不会上传</span><span id="saveStatus" role="status"></span></div>
+</section></main><div id="sr-status" role="status" aria-live="polite"></div>
+<dialog id="historyDialog" aria-labelledby="historyTitle">
+ <div class="history-head"><div><h2 id="historyTitle">绘画记录 <span id="historyCount"></span></h2><p>点选打开 · 长按删除</p></div><button id="closeHistory" aria-label="关闭绘画记录">关闭</button></div>
+ <div id="historyList" class="history-list"></div>
+ <div id="historyEmpty" class="history-empty" hidden><p>还没有绘画记录</p><button id="historyUpload">＋ 上传第一张图片</button></div>
+ <p id="historyError" class="error" role="alert"></p><button id="historyRetry" hidden>重新读取</button>
+</dialog>
+<dialog id="deleteHistoryDialog" aria-labelledby="deleteHistoryTitle" aria-describedby="deleteHistoryDescription">
+ <h2 id="deleteHistoryTitle">删除这条记录？</h2><p id="deleteHistoryName"></p>
+ <p id="deleteHistoryDescription">将删除本机保存的这张图片及绘制步骤。</p>
+ <p id="deleteHistoryError" class="error" role="alert"></p>
+ <div class="delete-history-actions"><button id="cancelHistoryDelete" autofocus>取消</button><button id="confirmHistoryDelete">删除记录</button></div>
+</dialog>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

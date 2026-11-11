@@ -1,0 +1,22 @@
+# Generated web files and test output
+dist/
+.generated/
+public/assets/
+test-results/
+
+# Preserved pre-migration experiments and deliverables
+/outputs/
+/work/
+
+# Local dependencies and runtime files
+node_modules/
+__pycache__/
+*.py[cod]
+*.log
+*.pid
+*.pending
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
